@@ -1,5 +1,3 @@
-
-  
 CREATE DATABASE Salesdata;
 
 USE DATABASE Salesdata;
@@ -373,7 +371,7 @@ VALUES
 
 
 DROP TABLE IF EXISTS orderdetails;
-#table have more than 1 primary key
+--table have more than 1 primary key
 CREATE TABLE orderdetails (
   orderNumber int NOT NULL,
   productCode varchar(15) NOT NULL,
@@ -384,7 +382,7 @@ CREATE TABLE orderdetails (
   );
 
 
-#insert more than 1000 rows
+--insert more than 1000 rows
 INSERT INTO orderdetails(orderNumber, productCode, quantityOrdered, priceEach, orderLineNumber)  
 SELECT orderNumber, productCode, quantityOrdered, priceEach, orderLineNumber FROM 
 (VALUES
