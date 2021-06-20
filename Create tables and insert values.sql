@@ -1,33 +1,4 @@
-Skip to content
-Search or jump to…
 
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@jessienguyen298 
-jessienguyen298
-/
-SQL-code
-1
-00
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-Settings
-SQL-code/Create tables and insert values
-@jessienguyen298
-jessienguyen298 salesdata
-Latest commit 21adceb 13 minutes ago
- History
- 1 contributor
-6657 lines (3353 sloc)  158 KB
   
 CREATE DATABASE Salesdata;
 
