@@ -1,0 +1,22 @@
+
+-- The difference in days between the most recent and oldest order date in the Orders file
+SELECT DATEDIFF(D,Min(orderDate),MAX(orderDate)) as Days
+FROM orders
+;
+
+
+--time between order date and ship date for each customer ordered by the largest difference
+SELECT orderNumber, DATEDIFF(D, orderDate, shippedDate) as Days
+FROM orders
+ORDER BY Days DESC;
+
+
+-- the value of orders shipped in August 2004
+SELECT o.orderNumber, (od.quantityOrdered*od.priceEach) as orderValue, o.orderDate
+FROM orders o
+JOIN orderdetails od ON o.orderNumber = od.orderNumber
+WHERE o.orderDate like '2004-08%'
+ORDER BY o.orderDate
+
+
+--
