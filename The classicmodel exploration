@@ -19,4 +19,23 @@ WHERE o.orderDate like '2004-08%'
 ORDER BY o.orderDate
 
 
---
+--the total value ordered, total amount paid, and their difference for each customer for orders placed in 2004 and payments received in 2004 
+SELECT sum(od.quantityOrdered*od.priceEach) as TotalOrderValue, 
+	sum(p.amount) as TotalPaid,
+	(sum(od.quantityOrdered*od.priceEach)-sum(p.amount)) as difference
+FROM orderdetails od 
+JOIN orders o ON o.orderNumber = od.orderNumber
+JOIN payments p ON p.customerNumber = o.customerNumber
+WHERE o.orderDate like '2004%' AND p.paymentDate like '2004%'
+
+--the employees who report to those employees who report to Diane Murphy
+SELECT e1.employeeNumber, CONCAT(e1.firstName, ' ', e1.lastName) as fullName
+FROM employees e1
+JOIN employees e2
+ON e1.reportsTo = e2.employeeNumber
+WHERE e2.employeeNumber = 
+              (SELECT employeeNumber 
+              FROM employees 
+              WHERE CONCAT(firstName, ' ', lastName) ='Diane Murphy');
+             
+ 
