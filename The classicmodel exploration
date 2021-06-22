@@ -1,3 +1,7 @@
+/*
+Skills used: Joins, CTE's, Temp Tables, Aggregate Functions, Creating Views, Converting Data Types, procedures
+*/
+
 
 -- The difference in days between the most recent and oldest order date in the Orders file
 SELECT DATEDIFF(D,Min(orderDate),MAX(orderDate)) as Days
@@ -37,5 +41,38 @@ WHERE e2.employeeNumber =
               (SELECT employeeNumber 
               FROM employees 
               WHERE CONCAT(firstName, ' ', lastName) ='Diane Murphy');
-             
+            
+	    
+--the percentage value of each product in inventory
+GO 
+CREATE VIEW inventory as
+SELECT productline, sum(quantityInStock) as stocks 
+FROM products
+GROUP BY productLine;
+
+SELECT productline, 100*stocks/(SELECT SUM(stocks) FROM inventory) as percentageInStock
+FROM inventory
+ORDER BY percentageInStock DESC;
+
+
+--convert miles per gallon to liters per 100 kilometers
+/*
+Convert gallon/miles to litter/100km
+1 gallon = 4.546092 litter
+1 miles = 1.609344 km
+*/
+
+GO
+CREATE PROCEDURE convertunit @gallonPerMiles decimal(10,2)
+AS
+BEGIN
+	DECLARE @litterper100km decimal(10,2)
+	SET @litterper100km = @gallonPerMiles * (4.546092/100*1.609344);
+	SELECT @litterper100km;
+END
+
+
+
+
  
+
