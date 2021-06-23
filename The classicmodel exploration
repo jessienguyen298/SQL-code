@@ -1,5 +1,6 @@
 /*
 Skills used: Joins, CTE's, Temp Tables, Aggregate Functions, Creating Views, Converting Data Types, procedures
+
 */
 
 
@@ -84,7 +85,6 @@ BEGIN
 	SET  MSRP = MSRP * @percentage
 	FROM   products2 
 	WHERE  productLine = @line;
-	SELECT * FROM products2;
 END
 
 
@@ -175,7 +175,34 @@ SELECT m3.paymentmonth, (m4.monthpaid-m3.monthpaid) as difference
 FROM monthlypaid2003 m3 JOIN monthlypaid2004 m4 ON m3.paymentmonth = m4.paymentmonth
 
 
+--the amount ordered in a specific month and year for customers containing a specified character string in their name
+GO 
+CREATE PROCEDURE customerorderreport @month int, @year int, @name varchar(30)
+AS
+BEGIN
+SELECT c.customerNumber, c.customerName,
+			DATEPART(year, orderDate) as year, 
+			DATEPART(month, orderdate) as month,
+			sum(quantityOrdered*priceEach) as ordervalue
+	FROM customers c 
+	JOIN orders o ON c.customerNumber = o.customerNumber
+	JOIN orderdetails od ON o.orderNumber = od.orderNumber
+	WHERE DATEPART(year, orderDate) = @year and DATEPART(month, orderdate)= @month and c.customerName like ('%' + @name + '%')
+	GROUP BY c.customerNumber, c.customerName, DATEPART(year, orderDate), DATEPART(month, orderdate)
+END;
 
 
-		
+--change creditlimit by country
+GO 
+CREATE PROCEDURE updatecreditlimit @ratio decimal(5,2), @country varchar(30)
+	AS
+	BEGIN
+	UPDATE customers
+		SET creditLimit = creditLimit * @ratio
+		FROM customers
+		WHERE country = @country;
+	END;
+	
+
+
 
