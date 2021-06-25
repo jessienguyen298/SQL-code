@@ -14,6 +14,12 @@ FROM orderdetails od
 JOIN orders o ON o.orderNumber = od.orderNumber
 GROUP BY od.productCode;
 
-
+-- payment of customers 2003 vs 2004
+SELECT c.customerName,c.customerNumber,
+       SUM(CASE WHEN year(paymentDate) = 2003 THEN amount END) AS payment_2003,
+       SUM(CASE WHEN year(paymentDate) = 2004 THEN amount END) AS payment_2004
+FROM customers c
+JOIN payments p ON c.customerNumber = p.customerNumber
+GROUP BY c.customerName,c.customerNumber;
 
 
