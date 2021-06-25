@@ -55,14 +55,11 @@ WHERE e2.employeeNumber =
             
 	    
 --the percentage value of each product in inventory
-GO 
-CREATE VIEW inventory as
-SELECT productline, sum(quantityInStock) as stocks 
+SELECT productline, 100*SUM(quantityInStock)/
+	(SELECT SUM(quantityInStock) 
+	FROM products) as percentageInStock
 FROM products
-GROUP BY productLine;
-
-SELECT productline, 100*stocks/(SELECT SUM(stocks) FROM inventory) as percentageInStock
-FROM inventory
+GROUP BY productLine
 ORDER BY percentageInStock DESC;
 
 
