@@ -33,6 +33,16 @@ JOIN orders o ON o.orderNumber = od.orderNumber
 JOIN payments p ON p.customerNumber = o.customerNumber
 WHERE o.orderDate like '2004%' AND p.paymentDate like '2004%'
 
+
+-- DEBT in 2003
+SELECT c.customerNumber, c.customerName, sum(quantityOrdered*priceEach) as debt
+FROM customers c 
+JOIN orders o ON c.customerNumber = o.customerNumber
+JOIN orderdetails od ON o.orderNumber = od.orderNumber
+WHERE year(orderDate)='2003' 
+	AND c.customerNumber NOT IN (SELECT customerNumber FROM payments WHERE year(paymentDate) = '2003')
+GROUP BY c.customerNumber, c.customerName
+
 --the employees who report to those employees who report to Diane Murphy
 SELECT e1.employeeNumber, CONCAT(e1.firstName, ' ', e1.lastName) as fullName
 FROM employees e1
