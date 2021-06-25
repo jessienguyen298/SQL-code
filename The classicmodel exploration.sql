@@ -171,18 +171,20 @@ WHERE paymentyear = '2004'
 
 
 --the difference in the amount received for each month of 2004 compared to 2003
-CREATE VIEW monthlypaid2003 AS
-SELECT paymentyear, paymentmonth, monthpaid
-FROM monthlypaid
-WHERE paymentyear = '2003';
-
-CREATE VIEW monthlypaid2004 AS
-SELECT paymentyear, paymentmonth, monthpaid
-FROM monthlypaid
-WHERE paymentyear = '2004'
-
-SELECT m3.paymentmonth, (m4.monthpaid-m3.monthpaid) as difference
-FROM monthlypaid2003 m3 JOIN monthlypaid2004 m4 ON m3.paymentmonth = m4.paymentmonth
+SELECT p1.month, (p2.monthpaid - p1.monthpaid) as difference
+FROM(
+	SELECT  YEAR(paymentDate) AS year, MONTH(PaymentDate) as month, SUM(amount) as monthpaid
+      FROM Payments 
+	  WHERE YEAR(paymentDate)= '2003'
+	  GROUP BY YEAR(paymentDate), MONTH(PaymentDate)
+	  )p1
+JOIN (
+	SELECT  YEAR(paymentDate) AS year, MONTH(PaymentDate) as month, SUM(amount) as monthpaid
+      FROM Payments 
+	  WHERE YEAR(paymentDate)= '2004'
+	  GROUP BY YEAR(paymentDate), MONTH(PaymentDate)
+	  )p2
+ON p1.month =p2.month
 
 
 --the amount ordered in a specific month and year for customers containing a specified character string in their name
