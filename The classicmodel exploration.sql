@@ -285,5 +285,12 @@ GROUP BY p.productLine
 ORDER BY profit DESC;
 
 
---
+--payments in any month and year are more than twice the average for that month and year
+SELECT p.checkNumber, p.amount, p.paymentDate
+FROM(
+	SELECT *, AVG(amount) OVER (PARTITION BY YEAR(paymentDate), MONTH(PaymentDate)) as avg_ym
+      FROM Payments 
+	  )p
+WHERE p.amount > 2 * avg_ym
+ORDER BY paymentDate;
 
