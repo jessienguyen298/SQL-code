@@ -1,5 +1,5 @@
 /*
-Skills used: Joins, CTE's, Temp Tables, Aggregate Functions, Creating Views, Converting Data Types, procedures
+Skills used: Joins, CTE's, Temp Tables, Aggregate Functions, Converting Data Types, procedures
 
 */
 
@@ -212,3 +212,21 @@ FROM(
 WHERE p.amount > 2 * avg_ym
 ORDER BY paymentDate;
 
+--the percentage value of its stock on hand as a percentage of the stock on hand for product line to which it belongs
+SELECT productCode,
+ROUND(100*quantityInStock*buyPrice/(SUM(quantityInStock*buyPrice) OVER (PARTITION BY productLine)),2) AS value_IL,
+ROUND(100*quantityInStock*buyPrice/(SELECT SUM(quantityInStock*buyPrice) FROM products),2) AS value_IS
+FROM products
+ORDER BY value_IS, value_IL
+
+-- orders containing more than two products, report those products that constitute more than 50% of the value of the order
+SELECT od1.productCode, od1.orderNumber
+FROM orderdetails od1
+JOIN 
+	(SELECT orderNumber, COUNT(productCode) as type_products, 
+			SUM(quantityOrdered*priceEach) as ordervalue
+		FROM orderdetails
+		GROUP BY orderNumber
+		HAVING COUNT(productCode) >2) od2
+ON od1.orderNumber = od2.orderNumber
+WHERE quantityOrdered*priceEach*2 > od2.ordervalue
